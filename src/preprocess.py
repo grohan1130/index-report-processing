@@ -286,6 +286,42 @@ def index_aggregation_by_urbanicity(df):
 
     return result
 
+def index_aggregation_by_household_education(df):
+    # Keep rows that have "Household Education -"
+    filtered_df = df[df['Attribute Name'].str.contains('Household Education -', na=False)].copy()
+    
+    # Extract education level from the 'Attribute Name' column
+    filtered_df['Education_Level'] = filtered_df['Attribute Name'].str.replace('Household Education - ', '', regex=False)
+    
+    # Define the education level mapping
+    education_mapping = {
+        'Some high school or less': 'Some high school or less',
+        'High school': 'High school',
+        'Some college': 'Some college',
+        'College': 'College',
+        'Graduate school': 'Graduate school'
+    }
+    
+    # Map education levels to standard categories
+    filtered_df['Education_Category'] = filtered_df['Education_Level'].map(education_mapping)
+    
+    # Group by education category and calculate the index
+    result = filtered_df.groupby('Education_Category', observed=True).agg({
+        'Persona Attribute Proportion': 'sum',
+        'Base Adjusted Population Attribute Proportion': 'sum'
+    }).reset_index()
+    
+    # Calculate the index
+    result['Index'] = (
+        result['Persona Attribute Proportion']
+        / result['Base Adjusted Population Attribute Proportion']
+    ) * 100
+    
+    # Rename columns for consistency
+    result = result.rename(columns={'Education_Category': 'Attribute Name'})
+    
+    return result
+
 
 def main():
     df = load_pandas_and_format()
