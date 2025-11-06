@@ -226,17 +226,80 @@ def index_aggregation_by_generation(df):
     
     return result
 
+def index_aggregation_by_has_kids(df):
+
+    has_kids_mask = df['Attribute Name'].str.contains('Presence of Children -', na=False)
+    modeled_rank_mask = df['Attribute Name'].str.contains('Modeled Rank', na=False)
+
+    # Exclude rows that mention Modeled Rank
+    filtered_df = df.loc[has_kids_mask & ~modeled_rank_mask].copy()
+
+    # Extract presence of children from the 'Attribute Name' column
+    filtered_df['Has_Kids'] = filtered_df['Attribute Name'].str.replace('Presence of Children - ', '', regex=False)
+
+    # Extract presence of children from the 'Attribute Name' column
+    filtered_df = filtered_df.copy()
+
+    filtered_df['Has_Kids'] = filtered_df['Attribute Name'].str.replace('Presence of Children - ', '')
+    # Group by presence of children and calculate the index
+    result = filtered_df.groupby('Has_Kids', observed=True).agg({
+        'Persona Attribute Proportion': 'sum',
+        'Base Adjusted Population Attribute Proportion': 'sum'
+    }).reset_index()
+    # Calculate the index
+    result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
+
+    # Rename columns for consistency
+    result = result.rename(columns={'Has_Kids': 'Attribute Name'})
+
+    return result
+
+def index_aggregation_by_urbanicity(df):
+    # Keep rows that have "Census: Rural-Urban County Size Code - ..."
+    prefix_re = r'Census:\s*Rural-Urban County Size Code\s*-\s*'
+    has_urb = df['Attribute Name'].str.contains(prefix_re, case=False, na=False)
+    filtered_df = df.loc[has_urb].copy()
+
+    # Extract the urbanicity label after the hyphen
+    filtered_df['Urbanicity'] = (
+        filtered_df['Attribute Name']
+        .str.extract(prefix_re + r'(.+)$')[0]
+        .str.strip()
+    )
+
+    # Aggregate and compute Index
+    result = (
+        filtered_df.groupby('Urbanicity', observed=True)
+        .agg({
+            'Persona Attribute Proportion': 'sum',
+            'Base Adjusted Population Attribute Proportion': 'sum'
+        })
+        .reset_index()
+    )
+    result['Index'] = (
+        result['Persona Attribute Proportion']
+        / result['Base Adjusted Population Attribute Proportion']
+    ) * 100
+
+    # Rename columns for consistency
+    result = result.rename(columns={'Urbanicity': 'Attribute Name'})
+
+    return result
 
 
 def main():
     df = load_pandas_and_format()
-    print(index_aggregation_by_age(df))
-    print(index_aggregation_by_household_size(df))
+    #print(index_aggregation_by_age(df))
+    #print(index_aggregation_by_household_size(df))
     #print(index_aggregation_by_age(df))
     #print(index_aggregation_by_ethnicity(df))
     #print(index_aggregation_by_gender(df))
-    print(index_aggregation_by_generation(df))
-    print("hello, world")
+    #print(index_aggregation_by_generation(df))
+    #print("hello, world")
+    #print(index_aggregation_by_has_kids(df))
+    print(index_aggregation_by_urbanicity(df))
+
+
 if __name__ == "__main__":
     main()
 
