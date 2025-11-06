@@ -125,7 +125,37 @@ def index_aggregation_by_gender(df):
 
 
  
+def index_aggregation_by_generation(df):
+    # Keep rows that have "Individual Generation - ..."
+    has_gen = df['Attribute Name'].str.contains(r'\bIndividual\s+Generation\s*-\s*', case=False, na=False)
+    filtered_df = df.loc[has_gen].copy()
 
+    # Extract the generation label (Gen X / Gen Z / Baby Boomer / Millennials)
+    filtered_df['Generation'] = (
+        filtered_df['Attribute Name']
+        .str.extract(r'Individual\s+Generation\s*-\s*(Gen X|Gen Z|Baby Boomer|Millennials)')[0]
+        .str.title()
+        .str.replace('Gen X', 'Gen X', regex=False)           # keep exact casing for Gen X
+        .str.replace('Gen Z', 'Gen Z', regex=False)           # keep exact casing for Gen Z
+        .str.replace('Baby Boomer', 'Baby Boomer', regex=False)
+        .str.replace('Millennials', 'Millennials', regex=False)
+    )
+
+    # Aggregate and compute Index
+    result = (
+        filtered_df.groupby('Generation', observed=True)
+        .agg({
+            'Persona Attribute Proportion': 'sum',
+            'Base Adjusted Population Attribute Proportion': 'sum'
+        })
+        .reset_index()
+    )
+    result['Index'] = (
+        result['Persona Attribute Proportion']
+        / result['Base Adjusted Population Attribute Proportion']
+    ) * 100
+
+    return result
 
 
 
@@ -133,7 +163,8 @@ def main():
     df = load_pandas_and_format()
     #print(index_aggregation_by_age(df))
     #print(index_aggregation_by_ethnicity(df))
-    print(index_aggregation_by_gender(df))
+    #print(index_aggregation_by_gender(df))
+    print(index_aggregation_by_generation(df))
 if __name__ == "__main__":
     main()
 
