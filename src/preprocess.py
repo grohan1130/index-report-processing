@@ -323,19 +323,4 @@ def index_aggregation_by_household_education(df):
     return result
 
 
-def main():
-    df = load_pandas_and_format()
-    #print(index_aggregation_by_age(df))
-    #print(index_aggregation_by_household_size(df))
-    #print(index_aggregation_by_age(df))
-    #print(index_aggregation_by_ethnicity(df))
-    #print(index_aggregation_by_gender(df))
-    #print(index_aggregation_by_generation(df))
-    #print("hello, world")
-    #print(index_aggregation_by_has_kids(df))
-    print(index_aggregation_by_urbanicity(df))
-
-
-if __name__ == "__main__":
-    main()
 
