@@ -8,7 +8,8 @@ from preprocess import (
     index_aggregation_by_gender,
     index_aggregation_by_generation,
     index_aggregation_by_has_kids,
-    index_aggregation_by_urbanicity
+    index_aggregation_by_urbanicity,
+    index_aggregation_by_household_education
 )
 
 
@@ -31,6 +32,7 @@ def merge_all_index_aggregations(df):
     generation_df = index_aggregation_by_generation(df)
     has_kids_df = index_aggregation_by_has_kids(df)
     urbanicity_df = index_aggregation_by_urbanicity(df)
+    household_education_df = index_aggregation_by_household_education(df)
     
     # Add a column to identify the aggregation type
     age_df['Aggregation Type'] = 'Age'
@@ -41,6 +43,7 @@ def merge_all_index_aggregations(df):
     generation_df['Aggregation Type'] = 'Generation'
     has_kids_df['Aggregation Type'] = 'Has Kids'
     urbanicity_df['Aggregation Type'] = 'Urbanicity'
+    household_education_df['Aggregation Type'] = 'Household Education'
     
     # Concatenate all dataframes
     merged_df = pd.concat([
@@ -51,7 +54,8 @@ def merge_all_index_aggregations(df):
         gender_df,
         generation_df,
         has_kids_df,
-        urbanicity_df
+        urbanicity_df,
+        household_education_df
     ], ignore_index=True)
     
     # Reorder columns for better readability
