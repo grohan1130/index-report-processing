@@ -1,4 +1,3 @@
-from numpy import result_type
 import pandas as pd
 
 
