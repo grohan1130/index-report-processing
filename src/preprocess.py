@@ -102,9 +102,6 @@ def index_aggregation_by_ethnicity(df):
 
 
 
-    
-
-    return result
 
 
 
