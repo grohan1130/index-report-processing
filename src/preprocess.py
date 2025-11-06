@@ -81,7 +81,7 @@ def index_aggregation_by_ethnicity(df):
     filtered_df['Ethnicity_Bin'] = pd.Categorical(filtered_df['Ethnicity_Bin'],
                                                   categories=bin_order, ordered=True)
 
-    # Aggregate like your age function
+    # Aggregate like age function
     result = (
         filtered_df
         .groupby('Ethnicity_Bin', observed=True)
@@ -100,7 +100,31 @@ def index_aggregation_by_ethnicity(df):
 
     return result
 
+def index_aggregation_by_gender(df):
+    #Keep rows that have "Gender -", but drop anything under "Children:"
+    has_gender = df['Attribute Name'].str.contains(r'\bGender\s*-\s*', case=False, na=False)
+    is_children = df['Attribute Name'].str.contains(r'\bChildren\b', case=False, na=False)
+    filtered_df = df.loc[has_gender & ~is_children].copy()
 
+    # Extract the gender label (Male/Female/Both)
+    filtered_df['Gender'] = (
+        filtered_df['Attribute Name']
+        .str.extract(r'Gender\s*-\s*(Male|Female|Both)')[0]
+        .str.title()
+    )
+
+    
+    result = filtered_df.groupby('Attribute Name', observed=True).agg({
+        'Persona Attribute Proportion': 'sum',
+        'Base Adjusted Population Attribute Proportion': 'sum'
+    }).reset_index()
+
+    # Calculate the index
+    result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
+    return result
+
+
+ 
 
 
 
@@ -108,8 +132,8 @@ def index_aggregation_by_ethnicity(df):
 def main():
     df = load_pandas_and_format()
     #print(index_aggregation_by_age(df))
-    print(index_aggregation_by_ethnicity(df))
-
+    #print(index_aggregation_by_ethnicity(df))
+    print(index_aggregation_by_gender(df))
 if __name__ == "__main__":
     main()
 
