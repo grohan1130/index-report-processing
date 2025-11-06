@@ -62,14 +62,30 @@ def index_aggregation_by_household_size(df):
     return result
 
 
-
-
+def index_aggregation_by_household_income(df):
+    filtered_df = df[df['Attribute Name'].str.contains('Income Tiers=', na=False)]
+    
+    # Extract income tier category from the 'Attribute Name' column
+    filtered_df = filtered_df.copy()
+    filtered_df['Income_Tier_Category'] = filtered_df['Attribute Name'].str.replace('Income Tiers=', '')
+    
+    # Group by income tier category and calculate the index
+    result = filtered_df.groupby('Income_Tier_Category', observed=True).agg({
+        'Persona Attribute Proportion': 'sum',
+        'Base Adjusted Population Attribute Proportion': 'sum'
+    }).reset_index()
+    
+    # Calculate the index
+    result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
+    
+    return result
 
 
 def main():
     df = load_pandas_and_format()
     print(index_aggregation_by_age(df))
     print(index_aggregation_by_household_size(df))
+    print(index_aggregation_by_household_income(df))
 
 if __name__ == "__main__":
     main()
