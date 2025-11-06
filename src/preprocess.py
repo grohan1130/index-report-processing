@@ -61,7 +61,6 @@ def index_aggregation_by_household_size(df):
     
     return result
 
-
 def index_aggregation_by_household_income(df):
     filtered_df = df[df['Attribute Name'].str.contains('Income Tiers=', na=False)]
     
@@ -81,11 +80,11 @@ def index_aggregation_by_household_income(df):
     return result
 
 
+
 def main():
     df = load_pandas_and_format()
     print(index_aggregation_by_age(df))
     print(index_aggregation_by_household_size(df))
-    print(index_aggregation_by_household_income(df))
 
 if __name__ == "__main__":
     main()
