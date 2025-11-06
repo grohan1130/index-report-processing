@@ -215,6 +215,7 @@ def main():
     #print(index_aggregation_by_ethnicity(df))
     #print(index_aggregation_by_gender(df))
     print(index_aggregation_by_generation(df))
+    print("hello, world")
 if __name__ == "__main__":
     main()
 
