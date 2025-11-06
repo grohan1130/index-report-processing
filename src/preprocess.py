@@ -27,6 +27,9 @@ def index_aggregation_by_age(df):
     # Calculate the index
     result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
     
+    # Rename columns for consistency
+    result = result.rename(columns={'Age_Bin': 'Attribute Name'})
+    
     return result
 
 def index_aggregation_by_household_size(df):
@@ -60,6 +63,9 @@ def index_aggregation_by_household_size(df):
     # Calculate the index
     result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
     
+    # Rename columns for consistency
+    result = result.rename(columns={'Household_Size_Category': 'Attribute Name'})
+    
     return result
 
 def index_aggregation_by_household_income(df):
@@ -78,6 +84,10 @@ def index_aggregation_by_household_income(df):
     # Calculate the index
     result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
     
+    # Rename columns for consistency
+    result = result.rename(columns={'Income_Tier_Category': 'Attribute Name'})
+    
+    return result
 
 def index_aggregation_by_ethnicity(df):
     filtered_df = df[df['Attribute Name'].str.contains('Ethnicity Groups -', na=False)]
@@ -147,6 +157,9 @@ def index_aggregation_by_ethnicity(df):
         / result['Base Adjusted Population Attribute Proportion']
     ) * 100
 
+    # Rename columns for consistency
+    result = result.rename(columns={'Ethnicity_Bin': 'Attribute Name'})
+
     return result
 
 def index_aggregation_by_gender(df):
@@ -170,6 +183,10 @@ def index_aggregation_by_gender(df):
 
     # Calculate the index
     result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
+    
+    # Rename columns for consistency
+    result = result.rename(columns={'Attribute Name': 'Attribute Name'})
+    
     return result
 
 
@@ -203,6 +220,10 @@ def index_aggregation_by_generation(df):
         result['Persona Attribute Proportion']
         / result['Base Adjusted Population Attribute Proportion']
     ) * 100
+    
+    # Rename columns for consistency
+    result = result.rename(columns={'Generation': 'Attribute Name'})
+    
     return result
 
 
