@@ -72,24 +72,71 @@ def index_aggregation_by_household_size(df):
     return result
 
 def index_aggregation_by_household_income(df):
-    filtered_df = df[df['Attribute Name'].str.contains('Income Tiers=', na=False)]
-    
-    # Extract income tier category from the 'Attribute Name' column
-    filtered_df = filtered_df.copy()
-    filtered_df['Income_Tier_Category'] = filtered_df['Attribute Name'].str.replace('Income Tiers=', '')
-    
-    # Group by income tier category and calculate the index
-    result = filtered_df.groupby('Income_Tier_Category', observed=True).agg({
-        'Persona Attribute Proportion': 'sum',
-        'Base Adjusted Population Attribute Proportion': 'sum'
-    }).reset_index()
-    
-    # Calculate the index
-    result['Index'] = (result['Persona Attribute Proportion'] / result['Base Adjusted Population Attribute Proportion']) * 100
-    
-    # Rename columns for consistency
-    result = result.rename(columns={'Income_Tier_Category': 'Attribute Name'})
-    
+    # Keep rows that have "Income Tiers="
+    mask = df["Attribute Name"].str.contains("Income Tiers=", na=False)
+    filtered_df = df.loc[mask].copy()
+
+    # Extract the income text after "Income Tiers="
+    filtered_df["Income_Text"] = (
+        filtered_df["Attribute Name"]
+        .str.replace("Income Tiers=", "", regex=False)
+        .str.strip()
+    )
+
+    # Helper: convert "$50,000 - $74,999" → 50000
+    def get_lower_bound(text):
+        text = text.replace("$", "").replace(",", "").lower()
+        if "or more" in text:
+            return 250000
+        if "-" in text:
+            return int(text.split("-")[0].strip())
+        return 0
+
+    # Determine bin based on lower bound
+    def income_bin(text):
+        low = get_lower_bound(text)
+        if low < 50000:
+            return "0–$49,999"
+        elif low < 100000:
+            return "$50,000–$99,999"
+        elif low < 150000:
+            return "$100,000–$149,999"
+        elif low < 200000:
+            return "$150,000–$199,999"
+        elif low < 250000:
+            return "$200,000–$249,999"
+        else:
+            return "$250,000+"
+
+    filtered_df["Income_Bin"] = filtered_df["Income_Text"].apply(income_bin)
+
+    # Aggregate and calculate Index
+    result = (
+        filtered_df.groupby("Income_Bin", observed=True)
+        .agg({
+            "Persona Attribute Proportion": "sum",
+            "Base Adjusted Population Attribute Proportion": "sum"
+        })
+        .reset_index()
+    )
+
+    result["Index"] = (
+        result["Persona Attribute Proportion"]
+        / result["Base Adjusted Population Attribute Proportion"]
+    ) * 100
+
+    # Enforce consistent order
+    order = [
+        "0–$49,999",
+        "$50,000–$99,999",
+        "$100,000–$149,999",
+        "$150,000–$199,999",
+        "$200,000–$249,999",
+        "$250,000+",
+    ]
+    result["Attribute Name"] = pd.Categorical(result["Income_Bin"], categories=order, ordered=True)
+    result = result.sort_values("Attribute Name").reset_index(drop=True)
+
     return result
 
 def index_aggregation_by_ethnicity(df):
@@ -326,4 +373,6 @@ def index_aggregation_by_household_education(df):
     return result
 
 
-
+if __name__ == "__main__":
+    df = load_pandas_and_format()
+    print(index_aggregation_by_household_income(df))

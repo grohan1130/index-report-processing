@@ -67,6 +67,13 @@ def merge_all_index_aggregations(df):
         'Index'
     ]]
     
+    # Convert proportions to whole-number percentages
+    merged_df['Persona Attribute Proportion'] = (merged_df['Persona Attribute Proportion'] * 100).round(0).astype(int)
+    merged_df['Base Adjusted Population Attribute Proportion'] = (merged_df['Base Adjusted Population Attribute Proportion'] * 100).round(0).astype(int)
+
+    # Round Index to a whole number (no decimals)
+    merged_df['Index'] = merged_df['Index'].round(0).astype(int)
+
     return merged_df
 
 

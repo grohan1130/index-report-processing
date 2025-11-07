@@ -1,0 +1,45 @@
+Aggregation Type,Attribute Name,Persona Attribute Proportion,Base Adjusted Population Attribute Proportion,Index
+Age,18-24,54,4,1446
+Age,25-34,46,12,383
+Age,35-44,0,18,0
+Age,45-54,0,20,0
+Age,55-64,0,17,0
+Age,65+,0,29,0
+Household Size,Five+ persons,45,9,503
+Household Size,Four persons,23,8,301
+Household Size,One person,9,44,20
+Household Size,Three persons,16,16,100
+Household Size,Two persons,8,24,32
+Household Income,"0–$49,999",7,34,22
+Household Income,"$50,000–$99,999",17,29,60
+Household Income,"$100,000–$149,999",20,17,118
+Household Income,"$150,000–$199,999",15,8,187
+Household Income,"$200,000–$249,999",10,4,224
+Household Income,"$250,000+",30,7,413
+Ethnicity,African American,3,7,41
+Ethnicity,White/European,87,77,114
+Ethnicity,Asian,2,5,46
+Ethnicity,Hispanic,8,11,69
+Ethnicity,Other,0,0,14
+Gender,Gender - Female,67,53,127
+Gender,Gender - Male,33,47,70
+Generation,Baby Boomer,0,30,0
+Generation,Gen X,0,33,0
+Generation,Gen Z,100,8,1194
+Generation,Millennials,0,28,0
+Has Kids,No,48,72,66
+Has Kids,Yes,52,28,186
+Urbanicity,"Metro Counties 250,000-1,000,000",25,23,111
+Urbanicity,"Metro Counties less than 250,000",6,9,63
+Urbanicity,"Metro Counties pop 1,000,000+",62,54,115
+Urbanicity,"Rural or less than 2,500 urban adjacent",0,1,20
+Urbanicity,"Rural or less than 2,500 urban not adjacent",0,1,35
+Urbanicity,"Urban 2,500-19,999 adjacent",2,5,44
+Urbanicity,"Urban 2,500-19,999 not adjacent",1,3,35
+Urbanicity,"Urban 20,000+ Metro adjacent",3,4,71
+Urbanicity,"Urban 20,000+ not adjacent",1,1,44
+Household Education,College,59,38,154
+Household Education,Graduate school,9,4,246
+Household Education,High school,13,28,46
+Household Education,Some college,23,34,68
+Household Education,Some high school or less,1,3,37
