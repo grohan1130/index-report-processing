@@ -1,8 +1,12 @@
 import pandas as pd
+import os
 
 
 def load_pandas_and_format():
-    raw_pandas_df = pd.read_excel("../../raw_input_files/raw_index_report.xlsx", sheet_name="Index Report", header=1)
+    # Get path relative to this script's location
+    script_dir = os.path.dirname(__file__)
+    file_path = os.path.join(script_dir, '..', '..', 'raw_input_files', 'raw_index_report.xlsx')
+    raw_pandas_df = pd.read_excel(file_path, sheet_name="Index Report", header=1)
     return raw_pandas_df
 
 def index_aggregation_by_age(df):
