@@ -2,7 +2,7 @@ import pandas as pd
 
 
 def load_pandas_and_format():
-    raw_pandas_df = pd.read_excel("raw_input_files/raw_index_report.xlsx", sheet_name="Index Report", header=1)
+    raw_pandas_df = pd.read_excel("../../raw_input_files/raw_index_report.xlsx", sheet_name="Index Report", header=1)
     return raw_pandas_df
 
 def index_aggregation_by_age(df):
