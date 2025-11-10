@@ -1,5 +1,6 @@
 /venv
 /raw_input_files/raw_index_report.xlsx
 /raw_input_files/TCCC Audience Insights Deep Dive.xlsx
+/raw_input_files/
 /src/__pycache__/
 /src/demo/__pycache__/
